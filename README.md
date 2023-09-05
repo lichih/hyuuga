@@ -76,3 +76,14 @@ for your `.gitlab-ci.yml`. You can read about them in our documentation
 This template repository also has a fully-automated dev setup for [Gitpod](https://docs.gitlab.com/ee/integration/gitpod.html).
 
 The `.gitpod.yml` ensures that, when you open this repository in Gitpod, you'll get a cloud workspace with .NET Core pre-installed, and your project will automatically be built and start running.
+
+- 目標
+  - 單元測試
+  - 團隊合作
+    - 責任區分
+    - 模組化
+  - 前後端同步技術
+    - websocket 持續連線
+    - 非同步 資料持續保存(RAM)
+    - serialization
+    - 差分/合併
