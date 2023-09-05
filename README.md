@@ -87,3 +87,12 @@ The `.gitpod.yml` ensures that, when you open this repository in Gitpod, you'll 
     - 非同步 資料持續保存(RAM)
     - serialization
     - 差分/合併
+
+- 備註
+  - namespace
+    - hinata
+      - 提供前端連線 (websocket server)
+      - 後端邏輯 (遊戲企劃面)
+    - neji
+      - 對後端連線 (websocket client)
+      - 前端邏輯 (呈現和互動相關)
