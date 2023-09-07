@@ -91,8 +91,10 @@ The `.gitpod.yml` ensures that, when you open this repository in Gitpod, you'll 
 - 備註
   - namespace
     - hinata
-      - 提供前端連線 (websocket server)
+      - websocket server
+      - 提供給前端連入
       - 後端邏輯 (遊戲企劃面)
     - neji
-      - 對後端連線 (websocket client)
+      - websocket client
+      - 對後端連線
       - 前端邏輯 (呈現和互動相關)
