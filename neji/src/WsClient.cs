@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.IO; // MemoryStream
 using System.Text;
 using System.Net.Http;
@@ -12,15 +13,13 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Skuld.Model;
 using Kara.Pattern;
-using Kara;
-using UnityEngine;
 
 namespace Skuld.Services {
     public record KaraConnectionData
     {
-        public string SkuldScheme { get; set; } = "https";
-        public string SkuldHost { get; set; } = "eir-k.4649.tw";
-        public string EirHost { get; set; } = "eir-k.4649.tw";
+        public string SkuldScheme { get; set; } = "http";
+        public string SkuldHost { get; set; } = "localhost:8591";
+        public string EirHost { get; set; } = "localhost:8591";
         public string User { get; set; } = "";
         public string Password { get; set; } = "";
     }
@@ -90,16 +89,16 @@ namespace Skuld.Services {
                     // TODO: 檢查 token exp ，在適當的時間從 /auth/refresh 取得新的 token
                 }
                 catch (TaskCanceledException) {
-                    Debug.LogWarning("KaraService.Run() TaskCanceledException");
+                    Debug.Print("KaraService.Run() TaskCanceledException");
                     break;
                 }
             }
-            // Debug.Log($"KaraService.Run() leaving {cancelToken.IsCancellationRequested}");
+            // Debug.Print($"KaraService.Run() leaving {cancelToken.IsCancellationRequested}");
             // Task.WaitAll(taskMessageDealer, refreshTask);
             // Task.WaitAll(taskMessageDealer);
             // Task.WaitAll(refreshTask);
             Task.WaitAll(subTasks, 2000);
-            // Debug.Log($"KaraService.Run() left");
+            // Debug.Print($"KaraService.Run() left");
             return await taskLoop;
         }
         class RefreshResult {
@@ -148,7 +147,7 @@ namespace Skuld.Services {
                     {
                         var msgs = this.messages;
                         this.messages = new HashSet<string>();
-                        // Debug.Log($"*** states.messages: {messages.Count}::{JsonConvert.SerializeObject(messages)} {this.messages.Contains("mail")}");
+                        // Debug.Print($"*** states.messages: {messages.Count}::{JsonConvert.SerializeObject(messages)} {this.messages.Contains("mail")}");
                         foreach(var m_ in msgs) {
                             if(m_=="mail") {
                                 await ReadUserMailAsync(states);
@@ -171,7 +170,7 @@ namespace Skuld.Services {
                                 }
                             }
                             else {
-                                Debug.LogWarning($"*** unknown message: {m_}");
+                                Debug.Print($"*** unknown message: {m_}");
                             }
                         }
                     }
@@ -185,7 +184,7 @@ namespace Skuld.Services {
         Dictionary<string, JObject> rpcResponses = new ();
         async Task<int> DataStreamLoop(CancellationToken cancelToken, WatchMany w) {
             var url = $"wss://{SkuldHost}/skuld/wsapi/user/{identity.uid}/ws";
-            Debug.Log($"ws connect to {url}");
+            Debug.Print($"ws connect to {url}");
             var uri = new Uri(url);
             var bytesReceived = WebSocket.CreateClientBuffer(4096, 4096);
             try {
@@ -197,7 +196,7 @@ namespace Skuld.Services {
                         ws.Options.AddSubProtocol("ws.kara.skuld");
                         ws.Options.SetRequestHeader("Authorization", "Bearer " + this.accessToken);
                         try {
-                            // Debug.Log("Connecting...");
+                            // Debug.Print("Connecting...");
                             await ws.ConnectAsync(uri, cancelToken);
                         }
                         catch(WebSocketException) {
@@ -210,7 +209,7 @@ namespace Skuld.Services {
                             using (var ms = new MemoryStream()) {
                                 while(true) {
                                     WebSocketReceiveResult rs = await ws.ReceiveAsync(bytesReceived, cancelToken);
-                                    // Debug.Log($"ws received {rs.Count} bytes");
+                                    // Debug.Print($"ws received {rs.Count} bytes");
                                     ms.Write(bytesReceived.Array, 0, rs.Count);
                                     if(rs.EndOfMessage) break;
                                 }
@@ -219,9 +218,9 @@ namespace Skuld.Services {
                                     String jsons = sr.ReadToEnd();
                                     JObject j = JObject.Parse(jsons);
                                     IList<string> keys = j.Properties().Select(p => p.Name).ToList();
-                                    // Debug.Log($"KEYS {keys.Count} keys, keys: {String.Join(",", keys)}");
+                                    // Debug.Print($"KEYS {keys.Count} keys, keys: {String.Join(",", keys)}");
                                     foreach(var k in keys) {
-                                        // Debug.Log($"ws received key: {k}");
+                                        // Debug.Print($"ws received key: {k}");
                                         try {
                                             if(k == "rpc") {
                                                 var rpc = j["rpc"].ToObject<JObject>();
@@ -244,11 +243,11 @@ namespace Skuld.Services {
                                                 addMessage(messages);
                                             }
                                             else {
-                                                Debug.LogWarning($"ws received unknown key: {k}");
+                                                Debug.Print($"ws received unknown key: {k}");
                                             }
                                         }
                                         catch(Exception e) {
-                                            Debug.LogWarning($"ws received exception: {e} {e.InnerException}");
+                                            Debug.Print($"ws received exception: {e} {e.InnerException}");
                                         }
                                     }
                                     await Task.Yield();
@@ -260,14 +259,14 @@ namespace Skuld.Services {
                         }
                     }
                     else {
-                        // Debug.Log(ws.State.ToString());
+                        // Debug.Print(ws.State.ToString());
                         await Task.Delay(1000, cancelToken);
                     }
                 }
-                // Debug.Log($"DataStreamLoop canceled::{cancelToken.IsCancellationRequested}");
+                // Debug.Print($"DataStreamLoop canceled::{cancelToken.IsCancellationRequested}");
             }
             catch(OperationCanceledException) {
-                // Debug.Log("DataStreamLoop canceled");
+                // Debug.Print("DataStreamLoop canceled");
                 if(ws!=null) {
                     if(ws.State == WebSocketState.Open) {
                         await ws.CloseAsync(WebSocketCloseStatus.NormalClosure, "bye", CancellationToken.None);
@@ -292,7 +291,7 @@ namespace Skuld.Services {
             MailResult o = JsonConvert.DeserializeObject<MailResult>(contents);
             MailCollection mails = new MailCollection();
             foreach(var m in o.items) {
-                mails.Add(m.MailId, m);
+                mails.collection.Add(m.MailId, m);
             }
             w.Set(mails);
             return 0;
@@ -311,7 +310,7 @@ namespace Skuld.Services {
             ShopResult o = JsonConvert.DeserializeObject<ShopResult>(contents);
             ShopAssetCollection shops = new ShopAssetCollection();
             foreach(var s in o.items) {
-                shops.Add(s.AssetId, s);
+                shops.collection.Add(s.AssetId, s);
             }
             w.Set(shops);
             return 0;
@@ -346,7 +345,7 @@ namespace Skuld.Services {
             }
         }
         public async Task<int> AuthUserAsync(KaraConnectionData connData) {
-            // Debug.Log($"{connData.SkuldHost} {connData.EirHost} {connData.User} {connData.Password}");
+            // Debug.Print($"{connData.SkuldHost} {connData.EirHost} {connData.User} {connData.Password}");
             if(connData==null) {
                 throw new ArgumentNullException("connData");
             }
@@ -374,7 +373,7 @@ namespace Skuld.Services {
             this.lastStatuscode = resp.StatusCode.GetHashCode();
             var contents = await resp.Content.ReadAsStringAsync();
             this.lastContent = contents;
-            Debug.Log($"AuthUserAsync {this.lastStatuscode} {this.lastContent}");
+            Debug.Print($"AuthUserAsync {this.lastStatuscode} {this.lastContent}");
             if(this.lastStatuscode < 200 || this.lastStatuscode >= 300) {
                 return -1;
             }
@@ -392,14 +391,14 @@ namespace Skuld.Services {
         }
 
         // eir image api
-        public string MailAssetImageUrl(Mail mail, MailAttachment a=null) {
-            ThrowConnDataExceptions(false);
-            if(mail==null) throw new ArgumentNullException("Mail");
-            if(a==null) a = mail.Attachments.FirstOrDefault();
-            if(a==null) throw new ArgumentNullException("MailAttachment");
-            // "/user/{uid}/mail/{mail_id}/attachment/{asset_id}/image"
-            return $"https://{this.EirHost}/api/user/{this.User}/mail/{mail.MailId}/attachment/{a.AssetId}/image";
-        }
+        // public string MailAssetImageUrl(Mail mail, MailAttachment a=null) {
+        //     ThrowConnDataExceptions(false);
+        //     if(mail==null) throw new ArgumentNullException("Mail");
+        //     if(a==null) a = mail.Attachments.FirstOrDefault();
+        //     if(a==null) throw new ArgumentNullException("MailAttachment");
+        //     // "/user/{uid}/mail/{mail_id}/attachment/{asset_id}/image"
+        //     return $"https://{this.EirHost}/api/user/{this.User}/mail/{mail.MailId}/attachment/{a.AssetId}/image";
+        // }
         public string AssetImageUrl(Asset a) {
             ThrowConnDataExceptions(false);
             if(a == null) throw new ArgumentNullException("asset");
