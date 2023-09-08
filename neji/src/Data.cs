@@ -46,22 +46,11 @@ namespace Skuld.Model
         stOverworked,
         stDying,
     }
-    public class RoomStatus {
-        [JsonProperty("floor")]
+    public record RoomStatus {
         public int Floor;
-        [JsonProperty("room")]
         public int Room;
-        [JsonProperty("slave_key")]
         public string SlaveKey = null;
         public string CustomerKey = null;
-        public RoomStatus Clone() {
-            return new RoomStatus {
-                Floor = this.Floor,
-                Room = this.Room,
-                SlaveKey = this.SlaveKey,
-                CustomerKey = this.CustomerKey,
-            };
-        }
     }
     public record SlaveState {
         public long TemplateId = 0;
@@ -87,16 +76,6 @@ namespace Skuld.Model
     }
     public record AssetCollection {
         public Dictionary<string, Asset> collection;
-        public static AssetCollection Merge(AssetCollection a, AssetCollection b) {
-            AssetCollection c = new AssetCollection();
-            foreach(var kv in a.collection) {
-                c.collection.Add(kv.Key, kv.Value with {} as Asset);
-            }
-            foreach(var kv in b.collection) {
-                c.collection[kv.Key] = kv.Value with {} as Asset;
-            }
-            return c;
-        }
     }
     public record SlaveMarketAsset {
         public Asset SlaveAsset;
@@ -104,5 +83,17 @@ namespace Skuld.Model
     }
     public record SlaveMarketAssets {
         public List<SlaveMarketAsset> Slaves;
+    }
+    public static class Operation {
+        public static AssetCollection Merge(AssetCollection a, AssetCollection b) {
+            AssetCollection c = new AssetCollection();
+            foreach(var kv in a.collection) {
+                c.collection.Add(kv.Key, kv.Value with {});
+            }
+            foreach(var kv in b.collection) {
+                c.collection[kv.Key] = kv.Value with {};
+            }
+            return c;
+        }
     }
 }
