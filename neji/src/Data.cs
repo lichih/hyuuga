@@ -4,95 +4,13 @@ using System.Globalization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
-using Kara.Model.Templates;
-using Kara;
 
 namespace Skuld.Model
 {
-    public class Data {
-        public static T DeepClone<T>(T obj) {
-            return JsonConvert.DeserializeObject<T>(JsonConvert.SerializeObject(obj));
-        }
-        public static Dictionary<string,T> Merge<T>(Dictionary<string,T> a, Dictionary<string,T> b)
-        {
-            var c = new Dictionary<string,T>();
-            foreach(var kv in a) {
-                c.Add(kv.Key, DeepClone<T>(kv.Value));
-            }
-            foreach(var kv in b) {
-                c[kv.Key] = DeepClone<T>(kv.Value);
-            }
-            return c;
-        }
-    }
-    public class ShopAsset : ICloneable {
-        [JsonProperty("uid")]
-        public string Uid { get; set; }
-        [JsonProperty("asset_id")]
-        public string AssetId { get; set; }
-        [JsonProperty("asset_type")]
-        public string AssetType { get; set; }
-        [JsonProperty("template_id")]
-        public int? TemplateId { get; set; }
-        [JsonProperty("meta")]
-        public JObject Meta { get; set; }
-        [JsonProperty("tags")]
-        public string[] Tags { get; set; }
-        [JsonProperty("price")]
-        public int Price { get; set; }
-        [JsonProperty("expire")]
-        public int? Expire { get; set; }
-        [JsonProperty("created")]
-        public int Created { get; set; }
-        [JsonProperty("updated")]
-        public int Updated { get; set; }
-        public ShopAsset Clone() {
-            return new ShopAsset {
-                Uid = this.Uid,
-                AssetId = this.AssetId,
-                AssetType = this.AssetType,
-                TemplateId = this.TemplateId,
-                Meta = this.Meta,
-                Tags = this.Tags,
-                Price = this.Price,
-                Expire = this.Expire,
-                Created = this.Created,
-                Updated = this.Updated
-            };
-        }
-        object ICloneable.Clone() {
-            return this.Clone();
-        }
-    }
-    public class ShopAssetCollection : Dictionary<string, ShopAsset>, ICloneable {
-        public ShopAssetCollection Clone() {
-            ShopAssetCollection clone = new ShopAssetCollection();
-            foreach(var kv in this) {
-                clone.Add(kv.Key, kv.Value.Clone() as ShopAsset);
-            }
-            return clone;
-        }
-        object ICloneable.Clone() {
-            return this.Clone();
-        }
-    }
-    public class Player : ICloneable {
-        [JsonProperty("uid")]
-        public string Uid { get; set; }
-        [JsonProperty("name")]
-        public string Nickname { get; set; }
-        [JsonProperty("gold")]
-        public int Gold { get; set; }
-        public Player Clone() {
-            return new Player {
-                Uid = this.Uid,
-                Nickname = this.Nickname,
-                Gold = this.Gold,
-            };
-        }
-        object ICloneable.Clone() {
-            return this.Clone();
-        }
+    public record Player {
+        public string Uid;
+        public string Nickname;
+        public int Gold;
     }
     public enum SlaveStatus {
         stNone,
