@@ -7,10 +7,36 @@ using Newtonsoft.Json.Linq;
 
 namespace Skuld.Model
 {
+    public record Attachment {
+        public byte[] bytes;
+    }
+    public record Mail {
+        public string MailId;
+        public string title, sender, receipt;
+        public string content;
+        public List<Attachment> Attachments;
+    }
+    public record MailCollection {
+        public Dictionary<string, Mail> collection;
+    }
+    public record ShopAsset {
+        public string Uid { get; set; }
+        public string AssetId { get; set; }
+        public string AssetType { get; set; }
+        public int? TemplateId { get; set; }
+        public string[] Tags { get; set; }
+        public int Price { get; set; }
+        public int? Expire { get; set; }
+        public int Created { get; set; }
+        public int Updated { get; set; }
+    }
+    public record ShopAssetCollection {
+        public Dictionary<string, ShopAsset> collection;
+    }
     public record Player {
-        public string Uid;
-        public string Nickname;
-        public int Gold;
+        public string Uid { get; set; }
+        public string Nickname { get; set; }
+        public int Gold { get; set; }
     }
     public enum SlaveStatus {
         stNone,
@@ -37,96 +63,42 @@ namespace Skuld.Model
             };
         }
     }
-    // public class SlaveState : ICloneable
-    public record SlaveState
-    {
+    public record SlaveState {
         public long TemplateId = 0;
-        [JsonProperty("lvl")]
         public int Level = 1;
-        [JsonProperty("rarity", NullValueHandling = NullValueHandling.Ignore)]
-        public Kara.Model.SlaveRarity Rarity = Kara.Model.SlaveRarity.None;
-
-        [JsonProperty("hp")]
+        // public Kara.Model.SlaveRarity Rarity = Kara.Model.SlaveRarity.None;
         public int HP = 100;
-        [JsonProperty("stamina")]
         public int Stamina = 100;
-        [JsonProperty("exp")]
         public int Exp = 0;
-        [JsonProperty("status", NullValueHandling = NullValueHandling.Ignore)]
         public SlaveStatus Status = SlaveStatus.stNone;
-        [JsonProperty("in_room_key")]
         public string InRoomKey = null;
-        [JsonProperty("attrs")]
         public long[] Attrs = null;
-        [JsonProperty("prefers")]
         public string[] Prefers = null;
-        [JsonProperty("skills")]
-        public (Skill Skill, int Level)[] Skills = null;
+        // public (Skill Skill, int Level)[] Skills = null;
     }
-    public partial class Asset : ICloneable {
-        [JsonProperty("asset_id")]
+    public record Asset {
         public string AssetId { get; set; }
-
-        [JsonProperty("asset_type")]
         public string AssetType { get; set; }
-
-        [JsonProperty("read")]
         public bool Read = false;
-        [JsonProperty("template_id")]
         public long TemplateId = 0;
-
-        [JsonProperty("meta")]
-        public JObject Meta { get; set; }
-
-        [JsonProperty("loc")]
         public string Loc { get; set; }
-
-        [JsonProperty("room_status")]
         public RoomStatus RoomStatus = null;
-
-        [JsonProperty("slave_state", NullValueHandling = NullValueHandling.Ignore)]
         public SlaveState SlaveState = null;
-
-        public Asset Clone() {
-            return new Asset {
-                AssetId = this.AssetId,
-                AssetType = this.AssetType,
-                TemplateId = this.TemplateId,
-                Read = this.Read,
-                Meta = this.Meta?.DeepClone() as JObject,
-                Loc = this.Loc,
-                RoomStatus = this.RoomStatus?.Clone(),
-                SlaveState = this.SlaveState with {},
-            };
-        }
-        object ICloneable.Clone() {
-            return this.Clone();
-        }
     }
-    public class AssetCollection : Dictionary<string, Asset>, ICloneable
-    {
+    public record AssetCollection {
+        public Dictionary<string, Asset> collection;
         public static AssetCollection Merge(AssetCollection a, AssetCollection b) {
             AssetCollection c = new AssetCollection();
-            foreach(var kv in a) {
-                c.Add(kv.Key, kv.Value.Clone() as Asset);
+            foreach(var kv in a.collection) {
+                c.collection.Add(kv.Key, kv.Value with {} as Asset);
             }
-            foreach(var kv in b) {
-                c[kv.Key] = kv.Value.Clone() as Asset;
+            foreach(var kv in b.collection) {
+                c.collection[kv.Key] = kv.Value with {} as Asset;
             }
             return c;
         }
-        public AssetCollection Clone() {
-            AssetCollection clone = new AssetCollection();
-            foreach(var kv in this) {
-                clone.Add(kv.Key, kv.Value.Clone() as Asset);
-            }
-            return clone;
-        }
-        object ICloneable.Clone() {
-            return this.Clone();
-        }
     }
-    public class SlaveMarketAsset {
+    public record SlaveMarketAsset {
         public Asset SlaveAsset;
         public bool Enabled = true;
     }

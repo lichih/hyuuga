@@ -5,6 +5,10 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "neji", "neji\neji.csproj", "{D4B7F729-788C-4146-8B5B-16592352AE83}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tests", "tests\tests.csproj", "{73345C1D-6CD8-4947-9CB5-20F3F27437CB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "hinata", "hinata\hinata.csproj", "{BAB33257-F25E-48BE-BEB0-35BD929C8F0B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +22,13 @@ Global
 		{D4B7F729-788C-4146-8B5B-16592352AE83}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D4B7F729-788C-4146-8B5B-16592352AE83}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D4B7F729-788C-4146-8B5B-16592352AE83}.Release|Any CPU.Build.0 = Release|Any CPU
+		{73345C1D-6CD8-4947-9CB5-20F3F27437CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{73345C1D-6CD8-4947-9CB5-20F3F27437CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{73345C1D-6CD8-4947-9CB5-20F3F27437CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{73345C1D-6CD8-4947-9CB5-20F3F27437CB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BAB33257-F25E-48BE-BEB0-35BD929C8F0B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BAB33257-F25E-48BE-BEB0-35BD929C8F0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BAB33257-F25E-48BE-BEB0-35BD929C8F0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BAB33257-F25E-48BE-BEB0-35BD929C8F0B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
