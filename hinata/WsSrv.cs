@@ -9,12 +9,16 @@ using System.Collections.Generic;
 
 namespace hinata;
 
+[Serializable]
+public record Message(string type, string data);
+
 public class EchoYamlSrv : WebSocketBehavior
 {
     protected override void OnOpen()
     {
-        var msg = $"opened connection: {ID}, convering YAML to JSON";
-        Send(msg);
+        var msg = new Message("N", $"opened connection: {ID}, convering YAML to JSON");
+        Send(JsonConvert.SerializeObject(msg));
+        // Send(msg);
     }
     protected override void OnMessage(MessageEventArgs e)
     {
