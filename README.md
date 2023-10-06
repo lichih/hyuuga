@@ -1,5 +1,7 @@
 ## Introduction
 
+https://docs.google.com/presentation/d/1FdFICC36-3VnpaKhkUs2vDC-i2rwGUtgn2iefxbEz-w/edit?usp=sharing
+
 This is a simple pipeline example for a .NET Core application, showing just
 how easy it is to get up and running with .NET development using GitLab.
 
@@ -87,6 +89,8 @@ The `.gitpod.yml` ensures that, when you open this repository in Gitpod, you'll 
     - 非同步 資料持續保存(RAM)
     - serialization
     - 差分/合併
+  - 工具
+    - postman
 
 - 備註
   - namespace
@@ -98,3 +102,5 @@ The `.gitpod.yml` ensures that, when you open this repository in Gitpod, you'll 
       - websocket client
       - 對後端連線
       - 前端邏輯 (呈現和互動相關)
+  - 工具
+    - postman
