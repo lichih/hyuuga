@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": ".."
+		},
+		{
+			"path": "../../../etc"
+		},
+		{
+			"path": "../../x/hytest"
+		}
+	],
+	"settings": {}
+}
