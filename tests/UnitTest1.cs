@@ -1,15 +1,20 @@
 namespace tests;
 using System;
+using System.Threading;
 using System.Diagnostics;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Net.WebSockets;
+
 using HyuugaGame.Model;
 using HyuugaGame.Connection;
 using static HyuugaGame.Model.Serialization;
 
 public record ConnectionSetting
 {
-    public string ServerURL;
-    public string UserID;
-    public string Password;
+    public string? ServerURL = null;
+    public string? UserID;
+    public string? Password;
 }
 
 public class TestConnectionInfo : IConnectionInfo
@@ -30,7 +35,7 @@ public class TestConnectionInfo : IConnectionInfo
     public string GetServerURL()
     {
         ReadSetting();
-        return _setting.ServerURL;
+        return _setting.ServerURL == null ? "" : _setting.ServerURL;
 
     }
 
@@ -48,6 +53,22 @@ public class Tests
     }
 
     [Test]
+    public void TestConnect()
+    {
+        var ci = new TestConnectionInfo();
+        var url = ci.GetServerURL();
+        var auth = ci.GetStoredAuthInfo();
+        // connect to websocket server at url using System.Net.WebSockets;
+        var ws = new ClientWebSocket();
+        ws.Options.SetRequestHeader("Authorization", auth.ToJson());
+        ws.ConnectAsync(new Uri(url), System.Threading.CancellationToken.None).Wait();
+        Assert.Pass();
+
+
+    }
+
+    [Test]
+
     public void TestConnectionInfo()
     {
         var ci = new TestConnectionInfo();
