@@ -22,6 +22,8 @@ public class Tests
         Console.WriteLine($"json_a: {json_a}");
         Console.WriteLine($"json_b: {json_b}");
 
+        Assert.Equals(a, @"{""Key"":""bac6ac98-4f48-40e5-a1d9-5f0390773009"",""AssetType"":""Master""}");
+
         Assert.Pass();
     }
 }

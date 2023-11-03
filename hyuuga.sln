@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tests", "tests\tests.csproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "hinata", "hinata\hinata.csproj", "{BAB33257-F25E-48BE-BEB0-35BD929C8F0B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "wssrv", "wssrv\wssrv.csproj", "{535E3485-6878-44E7-B02F-0DA454CC434D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{BAB33257-F25E-48BE-BEB0-35BD929C8F0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BAB33257-F25E-48BE-BEB0-35BD929C8F0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BAB33257-F25E-48BE-BEB0-35BD929C8F0B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{535E3485-6878-44E7-B02F-0DA454CC434D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{535E3485-6878-44E7-B02F-0DA454CC434D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{535E3485-6878-44E7-B02F-0DA454CC434D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{535E3485-6878-44E7-B02F-0DA454CC434D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
