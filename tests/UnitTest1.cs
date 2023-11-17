@@ -1,4 +1,3 @@
-namespace tests;
 using System;
 using System.Threading;
 using System.Diagnostics;
@@ -9,6 +8,8 @@ using System.Net.WebSockets;
 using HyuugaGame.Model;
 using HyuugaGame.Connection;
 using static HyuugaGame.Model.Serialization;
+
+namespace tests;
 
 public record ConnectionSetting
 {
